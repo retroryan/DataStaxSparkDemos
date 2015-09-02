@@ -1,4 +1,4 @@
-package simpleStreaming;
+package advanceStreaming;
 
 import com.datastax.spark.connector.cql.CassandraConnector;
 import org.apache.spark.SparkConf;

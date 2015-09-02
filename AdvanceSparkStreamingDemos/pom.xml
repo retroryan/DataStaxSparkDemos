@@ -28,7 +28,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>simpleStreaming.RunFeeder</mainClass>
+                            <mainClass>advanceStreaming.RunFeeder</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -54,7 +54,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>simpleStreaming.RunFeeder</mainClass>
+                    <mainClass>advanceStreaming.RunFeeder</mainClass>
                     <arguments>
                         <argument>127.0.0.1</argument>
                         <argument>9797</argument>

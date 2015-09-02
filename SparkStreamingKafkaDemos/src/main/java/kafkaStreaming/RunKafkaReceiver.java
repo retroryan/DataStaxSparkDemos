@@ -19,8 +19,6 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 
-import simpleSpark.SparkConfSetup;
-
 import static com.datastax.spark.connector.japi.CassandraJavaUtil.mapToRow;
 import static com.datastax.spark.connector.japi.CassandraStreamingJavaUtil.javaFunctions;
 
@@ -86,6 +84,7 @@ public class RunKafkaReceiver {
 
 
         JavaDStream<WordCount> wordCountStream = wordMap.map(wordCountPair -> new WordCount(wordCountPair._1(), wordCountPair._2(), new DateTime()));
+        wordCountStream.print();
 
         javaFunctions(wordCountStream)
                 .writerBuilder("streamdemo", "wordcount", mapToRow(WordCount.class))

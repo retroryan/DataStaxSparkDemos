@@ -46,8 +46,10 @@ The workshop requires the following software:
 
 The following examples are available in this demo:
 
-[Intro to Spark](INTRO_README.md)
+[Intro to Spark](SparkDemos/Spark_Demos.md)
 
-[Intro to Spark Streaming](STREAMING_EXERCISES.md)
+[Intro to Spark Streaming](SparkStreamingDemos/Streaming_Exercises.md)
 
-[Spark Streaming with Kafka](STREAMING_EXERCISES.md)
+[Advance Spark Streaming](AdvanceSparkStreamingDemos/Advance_Streaming_Exercises.md)
+
+[Spark Streaming with Kafka](SparkStreamingKafkaDemos/KAFKA_STREAMING_EXERCISES.md)

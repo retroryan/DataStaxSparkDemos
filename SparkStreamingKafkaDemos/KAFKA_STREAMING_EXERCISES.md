@@ -26,11 +26,16 @@ nohup bin/zookeeper-server-start.sh config/zookeeper.properties > runlogs/zookee
 
 nohup bin/kafka-server-start.sh config/server.properties > runlogs/kafka.log 2> runlogs/kafka.err < /dev/null &
 
+#kafka 0.8
 bin/kafka-create-topic.sh --zookeeper localhost:2181 --replica 1 --partition 1 --topic wordbucket
-
 bin/kafka-list-topic.sh --zookeeper localhost:2181
 
+#kafka 0.8.2
+bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic wordbucket
+bin/kafka-topics.sh --list --zookeeper localhost:2181
+
 bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic wordbucket --from-beginning
+
 
 Setup and Run DSE
 =============================
@@ -51,7 +56,7 @@ To build and run the Kafka Feeder Example
 To run the Kafka Streaming
 =========================================
 
-dse spark-submit --class kafkaStreaming.RunKafkaReceiver target/KafkaStreaming-0.1-jar-with-dependencies.jar localhost:2181
+dse spark-submit --packages org.apache.spark:spark-streaming-kafka_2.10:1.4.1 --class kafkaStreaming.RunKafkaReceiver KafkaStreaming-0.1.jar localhost:2181
 
 dse spark-submit --deploy-mode cluster --supervise --class kafkaStreaming.RunKafkaReceiver target/KafkaStreaming-0.1-jar-with-dependencies.jar localhost:2181
 

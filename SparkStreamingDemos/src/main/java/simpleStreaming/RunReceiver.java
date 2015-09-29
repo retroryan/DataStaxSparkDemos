@@ -5,10 +5,7 @@ import com.datastax.spark.connector.cql.CassandraConnector;
 import org.apache.spark.api.java.StorageLevels;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.StreamingContext;
-import org.apache.spark.streaming.api.java.JavaDStream;
-import org.apache.spark.streaming.api.java.JavaPairDStream;
-import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
-import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.api.java.*;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -17,6 +14,8 @@ import scala.Tuple2;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
+
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
 import static com.datastax.spark.connector.japi.CassandraJavaUtil.mapToRow;
 import static com.datastax.spark.connector.japi.CassandraStreamingJavaUtil.javaFunctions;
@@ -28,9 +27,19 @@ public class RunReceiver {
         return new Duration(seconds * 1000);
     }
 
-    public static JavaStreamingContext getJavaStreamingContext(Duration batchDuration) {
-        StreamingContext streamingContext = new StreamingContext(SparkConfSetup.getSparkConf(), batchDuration);
-        return new JavaStreamingContext(streamingContext);
+    static String CHECKPOINT_DIR = "/stream_demo";
+
+    public static JavaStreamingContext getJavaStreamingContext(Duration batchDuration, String hostname, int port) {
+
+        JavaStreamingContextFactory contextFactory = () -> {
+            StreamingContext streamingContext = new StreamingContext(SparkConfSetup.getSparkConf(), batchDuration);
+            JavaStreamingContext jssc = new JavaStreamingContext(streamingContext);
+            jssc.checkpoint(CHECKPOINT_DIR);
+            return jssc;
+        };
+
+        // Get JavaStreamingContext from checkpoint data or create a new one
+        return JavaStreamingContext.getOrCreate(CHECKPOINT_DIR, contextFactory);
     }
 
     public static void main(String[] args) {
@@ -43,18 +52,17 @@ public class RunReceiver {
         String tmpPort = args[1];
         int port = Integer.parseInt(tmpPort);
 
-        CassandraConnector connector = SparkConfSetup.getCassandraConnector();
-        setupCassandraTables(connector);
+        //CassandraConnector connector = SparkConfSetup.getCassandraConnector();
+        //setupCassandraTables(connector);
 
-
-        JavaStreamingContext javaStreamingContext = getJavaStreamingContext(getDurationsSeconds(1));
+        JavaStreamingContext javaStreamingContext = getJavaStreamingContext(getDurationsSeconds(1),hostname, port);
         JavaReceiverInputDStream<String> lineStream = javaStreamingContext.socketTextStream(
                 hostname, port, StorageLevels.MEMORY_AND_DISK_SER);
 
-        //javaStreamingContext.checkpoint("/tmp/spark");
         //lineStream.checkpoint(getDurationsSeconds(30));
 
         basicWordsMapAndSave(lineStream);
+
 
         javaStreamingContext.start();
         javaStreamingContext.awaitTermination();

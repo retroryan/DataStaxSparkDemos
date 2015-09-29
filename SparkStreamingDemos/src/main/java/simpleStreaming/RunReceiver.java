@@ -2,6 +2,7 @@ package simpleStreaming;
 
 import com.datastax.driver.core.Session;
 import com.datastax.spark.connector.cql.CassandraConnector;
+import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.StorageLevels;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.StreamingContext;
@@ -29,10 +30,14 @@ public class RunReceiver {
 
     static String CHECKPOINT_DIR = "/stream_demo";
 
-    public static JavaStreamingContext getJavaStreamingContext(Duration batchDuration, String hostname, int port) {
+    public static JavaStreamingContext getJavaStreamingContext(Duration batchDuration) {
+
+        SparkConf sparkConf = SparkConfSetup.getSparkConf();
+        System.out.println("created a new sparkConf = " + sparkConf);
 
         JavaStreamingContextFactory contextFactory = () -> {
-            StreamingContext streamingContext = new StreamingContext(SparkConfSetup.getSparkConf(), batchDuration);
+            System.out.println("Setting up a new streaming context with checkpoint");
+            StreamingContext streamingContext = new StreamingContext(sparkConf, batchDuration);
             JavaStreamingContext jssc = new JavaStreamingContext(streamingContext);
             jssc.checkpoint(CHECKPOINT_DIR);
             return jssc;
@@ -55,7 +60,8 @@ public class RunReceiver {
         //CassandraConnector connector = SparkConfSetup.getCassandraConnector();
         //setupCassandraTables(connector);
 
-        JavaStreamingContext javaStreamingContext = getJavaStreamingContext(getDurationsSeconds(1),hostname, port);
+        System.out.println("Setting up java streaming context");
+        JavaStreamingContext javaStreamingContext = getJavaStreamingContext(getDurationsSeconds(1));
         JavaReceiverInputDStream<String> lineStream = javaStreamingContext.socketTextStream(
                 hostname, port, StorageLevels.MEMORY_AND_DISK_SER);
 

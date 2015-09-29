@@ -110,6 +110,15 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
         </dependency>
+        <dependency>
+            <groupId>dse</groupId>
+            <artifactId>com.datastax</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>/Users/ryanknight/dse-4.7.3/lib/dse-4.7.3.jar</systemPath>
+        </dependency>
+
+
     </dependencies>
 
     <properties>

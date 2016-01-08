@@ -2,11 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>BasicSparkDemo</groupId>
-    <artifactId>BasicSparkDemo</artifactId>
+    <groupId>JobServerDemos</groupId>
+    <artifactId>JobServerDemos</artifactId>
     <packaging>jar</packaging>
     <version>0.1</version>
-    <name>BasicSparkDemo</name>
+    <name>JobServerDemos</name>
     <url>http://www.datastax.com/</url>
 
     <build>
@@ -42,10 +42,23 @@
             <version>1.4.1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>spark.jobserver</groupId>
+            <artifactId>job-server-api</artifactId>
+            <version>0.6.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <repositories>
+    <repository>
+      <id>bintray.com</id>
+      <url>https://dl.bintray.com/spark-jobserver/maven</url>
+    </repository>
+ </repositories>
 
 </project>

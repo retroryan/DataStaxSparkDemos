@@ -18,7 +18,6 @@ public interface SparkConfSetup {
 
         String contextDebugStr = sparkConf.toDebugString();
         System.out.println("contextDebugStr = " + contextDebugStr);
-
         return sparkConf;
     }
 

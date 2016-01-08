@@ -2,8 +2,10 @@ package simpleStreaming;
 
 import com.datastax.driver.core.Session;
 import com.datastax.spark.connector.cql.CassandraConnector;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.StorageLevels;
+import org.apache.spark.deploy.SparkHadoopUtil$;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.StreamingContext;
 import org.apache.spark.streaming.api.java.*;
@@ -30,21 +32,31 @@ public class RunReceiver {
 
     static String CHECKPOINT_DIR = "/stream_demo";
 
-    public static JavaStreamingContext getJavaStreamingContext(Duration batchDuration) {
+    public static JavaStreamingContext getJavaStreamingContext(Duration batchDuration, String hostname, int port) {
 
         SparkConf sparkConf = SparkConfSetup.getSparkConf();
-        System.out.println("created a new sparkConf = " + sparkConf);
 
         JavaStreamingContextFactory contextFactory = () -> {
             System.out.println("Setting up a new streaming context with checkpoint");
             StreamingContext streamingContext = new StreamingContext(sparkConf, batchDuration);
             JavaStreamingContext jssc = new JavaStreamingContext(streamingContext);
             jssc.checkpoint(CHECKPOINT_DIR);
+
+            JavaReceiverInputDStream<String> lineStream = jssc.socketTextStream(
+                    hostname, port, StorageLevels.MEMORY_AND_DISK_SER);
+
+            lineStream.checkpoint(getDurationsSeconds(30));
+
+            basicWordsMapAndSave(lineStream);
+
             return jssc;
         };
 
-        // Get JavaStreamingContext from checkpoint data or create a new one
-        return JavaStreamingContext.getOrCreate(CHECKPOINT_DIR, contextFactory);
+
+        JavaStreamingContext orCreate = JavaStreamingContext.getOrCreate(CHECKPOINT_DIR, contextFactory);
+        System.out.println("orCreate = " + orCreate);
+
+        return orCreate;
     }
 
     public static void main(String[] args) {
@@ -61,14 +73,7 @@ public class RunReceiver {
         //setupCassandraTables(connector);
 
         System.out.println("Setting up java streaming context");
-        JavaStreamingContext javaStreamingContext = getJavaStreamingContext(getDurationsSeconds(1));
-        JavaReceiverInputDStream<String> lineStream = javaStreamingContext.socketTextStream(
-                hostname, port, StorageLevels.MEMORY_AND_DISK_SER);
-
-        //lineStream.checkpoint(getDurationsSeconds(30));
-
-        basicWordsMapAndSave(lineStream);
-
+        JavaStreamingContext javaStreamingContext = getJavaStreamingContext(getDurationsSeconds(1), hostname, port);
 
         javaStreamingContext.start();
         javaStreamingContext.awaitTermination();

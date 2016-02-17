@@ -69,8 +69,8 @@ public class RunReceiver {
         String tmpPort = args[1];
         int port = Integer.parseInt(tmpPort);
 
-        //CassandraConnector connector = SparkConfSetup.getCassandraConnector();
-        //setupCassandraTables(connector);
+        CassandraConnector connector = SparkConfSetup.getCassandraConnector();
+        setupCassandraTables(connector);
 
         System.out.println("Setting up java streaming context");
         JavaStreamingContext javaStreamingContext = getJavaStreamingContext(getDurationsSeconds(1), hostname, port);

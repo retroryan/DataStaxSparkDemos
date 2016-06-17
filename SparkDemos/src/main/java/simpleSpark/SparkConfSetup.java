@@ -13,13 +13,11 @@ public interface SparkConfSetup {
 
     static public SparkConf getSparkConf() {
         return new SparkConf()
-                //.setMaster("127.0.0.1:7077")
                 .setAppName("SimpleSpark");
     }
 
     static public JavaSparkContext getJavaSparkContext() {
-        SparkContext sparkContext = new SparkContext(getSparkConf());
-        return new JavaSparkContext(sparkContext);
+        return new JavaSparkContext(getSparkConf());
     }
 
     static public CassandraConnector getCassandraConnector() {

@@ -8,6 +8,7 @@ import com.datastax.spark.connector.japi.SparkContextJavaFunctions;
 import com.datastax.spark.connector.japi.rdd.CassandraTableScanJavaRDD;
 import com.google.common.base.Objects;
 import org.apache.hadoop.util.StringUtils;
+import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -24,15 +25,21 @@ public class BasicReadWriteDemo {
 
     public static void main(String[] args) {
 
-        JavaSparkContext javaSparkContext = SparkConfSetup.getJavaSparkContext();
+//        JavaSparkContext javaSparkContext = SparkConfSetup.getJavaSparkContext();
+
+        SparkConf conf = new SparkConf()
+                .setAppName("SimpleSpark");
+        JavaSparkContext sc = new JavaSparkContext(conf);
 
         CassandraConnector connector = SparkConfSetup.getCassandraConnector();
 
         basicCassandraSession(connector);
 
-        saveRDDtoCassandra(javaSparkContext);
 
-        javaSparkContext.stop();
+        saveRDDtoCassandra(10, sc);
+
+
+        sc.stop();
 
     }
 
@@ -54,12 +61,14 @@ public class BasicReadWriteDemo {
         }
     }
 
-    private static void saveRDDtoCassandra(JavaSparkContext javaSparkContext) {
+    private static void saveRDDtoCassandra(int cnt, JavaSparkContext javaSparkContext) {
         // here we are going to save some data to Cassandra...
         List<Person> people = Arrays.asList(
-                Person.newInstance(1, "John", new Date()),
-                Person.newInstance(2, "Anna", new Date()),
-                Person.newInstance(3, "Andrew", new Date())
+                Person.newInstance(cnt, "John", new Date()),
+                Person.newInstance(cnt+1, "Anna", new Date()),
+                Person.newInstance(cnt+2, "Andrew", new Date()),
+                Person.newInstance(cnt+3, "Andrew", new Date()),
+                Person.newInstance(cnt+4, "Andrew", new Date())
         );
 
         JavaRDD<Person> peopleRDD = javaSparkContext.parallelize(people);

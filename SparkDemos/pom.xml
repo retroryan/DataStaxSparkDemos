@@ -30,6 +30,19 @@
             <version>1.4.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.10</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-hive_2.10</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+
         <dependency>
             <groupId>com.datastax.spark</groupId>
             <artifactId>spark-cassandra-connector_2.10</artifactId>
@@ -42,10 +55,33 @@
             <version>1.4.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>spark.jobserver</groupId>
+            <artifactId>job-server-api_2.10</artifactId>
+            <version>0.5.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>spark.jobserver</groupId>
+            <artifactId>job-server-extras_2.10</artifactId>
+            <version>0.5.2</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>Job Server Bintray</id>
+            <url>https://dl.bintray.com/spark-jobserver/maven</url>
+        </repository>
+    </repositories>
 
 </project>

@@ -14,7 +14,7 @@ In the next series of demos we will be running the Spark Jobs with the Spark Mas
   `mvn package`
 * Run the Spark Project by submitting the job to the DSE Spark Master (modify the command to point to where you installed DSE):
 
-  `dse-4.7.3/bin/dse spark-submit --class simpleSpark.BasicSparkDemo ./target/BasicSparkDemo-0.1.jar`
+  `dse spark-submit --class simpleSpark.BasicSparkDemo ./target/BasicSparkDemo-0.1.jar`
 
 * [See these docs for details about dse spark-submit](http://docs.datastax.com/en/datastax_enterprise/4.6/datastax_enterprise/spark/sparkStart.html)
 
@@ -25,7 +25,7 @@ In the next series of demos we will be running the Spark Jobs with the Spark Mas
 
 ## Demo 2 - Connecting to Cassandra from Spark and Writing tables from a Spark JavaRDD into Cassandra
 
-* `dse-4.7.3/bin/dse spark-submit --class simpleSpark.BasicReadWriteDemo ./target/BasicSparkDemo-0.1.jar`
+* `dse spark-submit --class simpleSpark.BasicReadWriteDemo ./target/BasicSparkDemo-0.1.jar`
 
 * The cassandra host used to establish a connection to that cassandra server is automatically set when the program is run with dse spark-submit.
 * The most basic way to connect to Cassandra from Spark is to create a session and execute CQL on that session.
@@ -87,7 +87,7 @@ In Java a Pair RDD can be created using the method `mapToPair`.  It operates on 
 
 * Copy the data directory in the parent directory into the /tmp directory on BOTH the Spark Driver and the Spark Master where DSE is running.  The program will try and read the text files from the /tmp/data directory.
 
-* Run the program using `dse-4.7.3/bin/dse spark-submit --class simpleSpark.SparkWordCount ./target/BasicSparkDemo-0.1.jar`
+* Run the program using `dse spark-submit --class simpleSpark.SparkWordCount ./target/BasicSparkDemo-0.1.jar`
 
 * The method sparkWordCount iterates through each of the files in the constant  `DATA_FILES` reads the file into a Spark RDD
   * `javaSparkContext.textFile(DATA_FILE_DIR + fileName);`
